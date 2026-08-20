@@ -22,13 +22,12 @@ LAKEHOUSE_ROOT = (
     "5aec4f99-c467-448f-8829-6a60516c2336"
 )
 RAW_ROOT = f"{LAKEHOUSE_ROOT}/Files/wwi-raw-data"
-SILVER_ROOT = f"{LAKEHOUSE_ROOT}/Tables/silver"
 SILVER_TABLES = {
-    "city": "dim_city",
-    "customer": "dim_customer",
-    "date": "dim_date",
-    "stock_item": "dim_stock_item",
-    "sale": "fact_sale",
+    "city": "silver_dim_city",
+    "customer": "silver_dim_customer",
+    "date": "silver_dim_date",
+    "stock_item": "silver_dim_stock_item",
+    "sale": "silver_fact_sale",
 }
 
 
@@ -78,26 +77,26 @@ silver = {
 
 # CELL ********************
 
-# Overwrite is intentional only for this notebook's own Tables/silver paths:
-# the source Files/wwi-raw-data files are never modified.
+# Fabric catalogs managed tables created with saveAsTable. Writing directly to
+# nested Tables/silver paths creates valid Delta data but leaves it under the
+# Unidentified area, so the Silver layer is separated by table naming instead.
+# Overwrite affects only these Silver tables; raw input files are never modified.
 for key, frame in silver.items():
     table_name = SILVER_TABLES[key]
-    silver_path = f"{SILVER_ROOT}/{table_name}"
     (
         frame.write.mode("overwrite")
         .format("delta")
         .option("overwriteSchema", "true")
-        .save(silver_path)
+        .saveAsTable(table_name)
     )
-    print(f"Wrote {silver_path}: {frame.count()} rows")
+    print(f"Wrote managed table {table_name}: {frame.count()} rows")
 
 
 # CELL ********************
 
 print("Silver tables:")
 for table_name in SILVER_TABLES.values():
-    silver_path = f"{SILVER_ROOT}/{table_name}"
-    print(silver_path, spark.read.format("delta").load(silver_path).count())
+    print(table_name, spark.table(table_name).count())
 
 
 # METADATA ********************
