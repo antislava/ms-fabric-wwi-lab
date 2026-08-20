@@ -145,6 +145,13 @@ for table_name in SILVER_TABLES.values():
     print(qualified_table_name, spark.table(qualified_table_name).count())
 
 
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
 # CELL ********************
 
 # Gold is a small presentation layer built only from managed Silver tables.
@@ -189,6 +196,13 @@ for key, frame in gold.items():
     )
     print(f"Wrote managed table {table_name}: {frame.count()} rows")
 
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
 
 # CELL ********************
 
