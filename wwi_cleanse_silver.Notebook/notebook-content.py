@@ -41,6 +41,10 @@ SILVER_TABLES = {
     "stock_item": "silver_dim_stock_item",
     "sale": "silver_fact_sale",
 }
+GOLD_TABLES = {
+    "sales_by_year": "gold_sales_by_year",
+    "sales_by_city": "gold_sales_by_city",
+}
 
 
 def read_raw(name):
@@ -137,6 +141,59 @@ for key, frame in silver.items():
 
 print("Silver tables:")
 for table_name in SILVER_TABLES.values():
+    qualified_table_name = f"{TABLE_NAMESPACE}.{table_name}"
+    print(qualified_table_name, spark.table(qualified_table_name).count())
+
+
+# CELL ********************
+
+# Gold is a small presentation layer built only from managed Silver tables.
+# It deliberately leaves both the raw Files and Silver tables untouched.
+sales = spark.table(f"{TABLE_NAMESPACE}.{SILVER_TABLES['sale']}")
+cities = spark.table(f"{TABLE_NAMESPACE}.{SILVER_TABLES['city']}")
+
+gold = {
+    "sales_by_year": (
+        sales.withColumn("CalendarYear", F.year("InvoiceDateKey"))
+        .groupBy("CalendarYear")
+        .agg(
+            F.countDistinct("WWIInvoiceID").alias("InvoiceCount"),
+            F.sum("Quantity").alias("QuantitySold"),
+            F.sum("TotalExcludingTax").alias("SalesExcludingTax"),
+            F.sum("TaxAmount").alias("TaxAmount"),
+            F.sum("Profit").alias("Profit"),
+            F.sum("TotalIncludingTax").alias("SalesIncludingTax"),
+        )
+        .orderBy("CalendarYear")
+    ),
+    "sales_by_city": (
+        sales.join(cities.select("CityKey", "City", "Country"), "CityKey", "left")
+        .groupBy("CityKey", "City", "Country")
+        .agg(
+            F.countDistinct("WWIInvoiceID").alias("InvoiceCount"),
+            F.sum("Quantity").alias("QuantitySold"),
+            F.sum("TotalIncludingTax").alias("SalesIncludingTax"),
+            F.sum("Profit").alias("Profit"),
+        )
+        .orderBy(F.col("SalesIncludingTax").desc())
+    ),
+}
+
+for key, frame in gold.items():
+    table_name = f"{TABLE_NAMESPACE}.{GOLD_TABLES[key]}"
+    (
+        frame.write.mode("overwrite")
+        .format("delta")
+        .option("overwriteSchema", "true")
+        .saveAsTable(table_name)
+    )
+    print(f"Wrote managed table {table_name}: {frame.count()} rows")
+
+
+# CELL ********************
+
+print("Gold tables:")
+for table_name in GOLD_TABLES.values():
     qualified_table_name = f"{TABLE_NAMESPACE}.{table_name}"
     print(qualified_table_name, spark.table(qualified_table_name).count())
 
