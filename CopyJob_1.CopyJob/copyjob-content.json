@@ -1,0 +1,251 @@
+{
+  "properties": {
+    "jobMode": "Batch",
+    "source": {
+      "type": "Parquet",
+      "connectionSettings": {
+        "type": "AzureBlobStorage",
+        "externalReferences": {
+          "connection": "63b04cd8-5ba6-4f3b-9056-b00ea381fe8e"
+        }
+      }
+    },
+    "destination": {
+      "type": "Parquet",
+      "connectionSettings": {
+        "type": "Lakehouse",
+        "typeProperties": {
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "artifactId": "516c2336-6a60-8829-448f-c4675aec4f99",
+          "rootFolder": "Files"
+        }
+      }
+    },
+    "policy": {
+      "timeout": "0.12:00:00",
+      "retry": 0
+    }
+  },
+  "activities": [
+    {
+      "id": "1f4afa19-5db7-490f-bbe5-693f6a026fed",
+      "properties": {
+        "source": {
+          "datasetSettings": {
+            "location": {
+              "type": "AzureBlobStorageLocation",
+              "fileName": "DimCity.parquet",
+              "folderPath": "WideWorldImportersDW/parquet/tables",
+              "container": "sampledata"
+            },
+            "compressionCodec": "snappy"
+          },
+          "storeSettings": {
+            "recursive": true,
+            "enablePartitionDiscovery": false
+          }
+        },
+        "destination": {
+          "datasetSettings": {
+            "location": {
+              "type": "LakehouseLocation",
+              "fileName": "DimCity.parquet",
+              "folderPath": "wwi-raw-data"
+            },
+            "compressionCodec": "snappy"
+          },
+          "storeSettings": {},
+          "formatSettings": {
+            "enableVertiParquet": true
+          }
+        },
+        "enableStaging": false,
+        "translator": {
+          "type": "TabularTranslator"
+        },
+        "typeConversionSettings": {
+          "typeConversion": {
+            "allowDataTruncation": true,
+            "treatBooleanAsNumber": false
+          }
+        }
+      }
+    },
+    {
+      "id": "1e6b09b6-1a07-4600-9696-a33dcb356889",
+      "properties": {
+        "source": {
+          "datasetSettings": {
+            "location": {
+              "type": "AzureBlobStorageLocation",
+              "fileName": "DimCustomer.parquet",
+              "folderPath": "WideWorldImportersDW/parquet/tables",
+              "container": "sampledata"
+            },
+            "compressionCodec": "snappy"
+          },
+          "storeSettings": {
+            "recursive": true,
+            "enablePartitionDiscovery": false
+          }
+        },
+        "destination": {
+          "datasetSettings": {
+            "location": {
+              "type": "LakehouseLocation",
+              "fileName": "DimCustomer.parquet",
+              "folderPath": "wwi-raw-data"
+            },
+            "compressionCodec": "snappy"
+          },
+          "storeSettings": {},
+          "formatSettings": {
+            "enableVertiParquet": true
+          }
+        },
+        "enableStaging": false,
+        "translator": {
+          "type": "TabularTranslator"
+        },
+        "typeConversionSettings": {
+          "typeConversion": {
+            "allowDataTruncation": true,
+            "treatBooleanAsNumber": false
+          }
+        }
+      }
+    },
+    {
+      "id": "1d681e68-7aa3-4ba7-bd6a-fbe3c682859b",
+      "properties": {
+        "source": {
+          "datasetSettings": {
+            "location": {
+              "type": "AzureBlobStorageLocation",
+              "fileName": "DimDate.parquet",
+              "folderPath": "WideWorldImportersDW/parquet/tables",
+              "container": "sampledata"
+            },
+            "compressionCodec": "snappy"
+          },
+          "storeSettings": {
+            "recursive": true,
+            "enablePartitionDiscovery": false
+          }
+        },
+        "destination": {
+          "datasetSettings": {
+            "location": {
+              "type": "LakehouseLocation",
+              "fileName": "DimDate.parquet",
+              "folderPath": "wwi-raw-data"
+            },
+            "compressionCodec": "snappy"
+          },
+          "storeSettings": {},
+          "formatSettings": {
+            "enableVertiParquet": true
+          }
+        },
+        "enableStaging": false,
+        "translator": {
+          "type": "TabularTranslator"
+        },
+        "typeConversionSettings": {
+          "typeConversion": {
+            "allowDataTruncation": true,
+            "treatBooleanAsNumber": false
+          }
+        }
+      }
+    },
+    {
+      "id": "5cfd311e-8a74-4ba6-810a-0cd7eeef8cdf",
+      "properties": {
+        "source": {
+          "datasetSettings": {
+            "location": {
+              "type": "AzureBlobStorageLocation",
+              "fileName": "DimStockItem.parquet",
+              "folderPath": "WideWorldImportersDW/parquet/tables",
+              "container": "sampledata"
+            },
+            "compressionCodec": "snappy"
+          },
+          "storeSettings": {
+            "recursive": true,
+            "enablePartitionDiscovery": false
+          }
+        },
+        "destination": {
+          "datasetSettings": {
+            "location": {
+              "type": "LakehouseLocation",
+              "fileName": "DimStockItem.parquet",
+              "folderPath": "wwi-raw-data"
+            },
+            "compressionCodec": "snappy"
+          },
+          "storeSettings": {},
+          "formatSettings": {
+            "enableVertiParquet": true
+          }
+        },
+        "enableStaging": false,
+        "translator": {
+          "type": "TabularTranslator"
+        },
+        "typeConversionSettings": {
+          "typeConversion": {
+            "allowDataTruncation": true,
+            "treatBooleanAsNumber": false
+          }
+        }
+      }
+    },
+    {
+      "id": "4652d5b6-712b-4700-bf00-0a6f6f3a7fe4",
+      "properties": {
+        "source": {
+          "datasetSettings": {
+            "location": {
+              "type": "AzureBlobStorageLocation",
+              "fileName": "FactSale.parquet",
+              "folderPath": "WideWorldImportersDW/parquet/tables",
+              "container": "sampledata"
+            },
+            "compressionCodec": "snappy"
+          },
+          "storeSettings": {
+            "recursive": true,
+            "enablePartitionDiscovery": false
+          }
+        },
+        "destination": {
+          "datasetSettings": {
+            "location": {
+              "type": "LakehouseLocation",
+              "fileName": "FactSale.parquet",
+              "folderPath": "wwi-raw-data"
+            },
+            "compressionCodec": "snappy"
+          },
+          "storeSettings": {},
+          "formatSettings": {
+            "enableVertiParquet": true
+          }
+        },
+        "enableStaging": false,
+        "translator": {
+          "type": "TabularTranslator"
+        },
+        "typeConversionSettings": {
+          "typeConversion": {
+            "allowDataTruncation": true,
+            "treatBooleanAsNumber": false
+          }
+        }
+      }
+    }
+  ]
+}
