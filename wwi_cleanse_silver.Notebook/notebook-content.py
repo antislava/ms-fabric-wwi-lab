@@ -22,6 +22,7 @@ LAKEHOUSE_ROOT = (
     "5aec4f99-c467-448f-8829-6a60516c2336"
 )
 RAW_ROOT = f"{LAKEHOUSE_ROOT}/Files/wwi-raw-data"
+TABLE_NAMESPACE = "wwi"
 SILVER_TABLES = {
     "city": "silver_dim_city",
     "customer": "silver_dim_customer",
@@ -83,20 +84,22 @@ silver = {
 # Overwrite affects only these Silver tables; raw input files are never modified.
 for key, frame in silver.items():
     table_name = SILVER_TABLES[key]
+    qualified_table_name = f"{TABLE_NAMESPACE}.{table_name}"
     (
         frame.write.mode("overwrite")
         .format("delta")
         .option("overwriteSchema", "true")
-        .saveAsTable(table_name)
+        .saveAsTable(qualified_table_name)
     )
-    print(f"Wrote managed table {table_name}: {frame.count()} rows")
+    print(f"Wrote managed table {qualified_table_name}: {frame.count()} rows")
 
 
 # CELL ********************
 
 print("Silver tables:")
 for table_name in SILVER_TABLES.values():
-    print(table_name, spark.table(table_name).count())
+    qualified_table_name = f"{TABLE_NAMESPACE}.{table_name}"
+    print(qualified_table_name, spark.table(qualified_table_name).count())
 
 
 # METADATA ********************
