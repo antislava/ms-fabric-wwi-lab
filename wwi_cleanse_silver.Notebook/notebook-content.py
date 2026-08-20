@@ -12,12 +12,17 @@
 # CELL ********************
 
 # This notebook turns the copied WWI parquet files into reproducible Silver
-# Delta tables. Keep the path relative to the attached Lakehouse so the same
-# source works in Fabric and in a Livy session.
+# Delta tables. Use an explicit OneLake root: a notebook that has not had the
+# Lakehouse attached resolves relative paths under the user area instead.
 from pyspark.sql import functions as F
 
-RAW_ROOT = "Files/wwi-raw-data"
-SILVER_ROOT = "Tables/silver"
+LAKEHOUSE_ROOT = (
+    "abfss://fee6f10f-56a9-420a-8702-b961908c579b"
+    "@onelake.dfs.fabric.microsoft.com/"
+    "5aec4f99-c467-448f-8829-6a60516c2336"
+)
+RAW_ROOT = f"{LAKEHOUSE_ROOT}/Files/wwi-raw-data"
+SILVER_ROOT = f"{LAKEHOUSE_ROOT}/Tables/silver"
 SILVER_TABLES = {
     "city": "dim_city",
     "customer": "dim_customer",
