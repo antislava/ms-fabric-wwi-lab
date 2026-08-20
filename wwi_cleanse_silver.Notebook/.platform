@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "wwi_cleanse_silver",
+    "description": "WWI Bronze-to-Silver cleansing and quality checks"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "d5cafe6f-4908-9b1e-4f82-d0ccc1456e45"
+  }
+}
