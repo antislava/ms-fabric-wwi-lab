@@ -49,6 +49,13 @@ def clean_strings(frame):
     )
 
 
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
 # CELL ********************
 
 # Load all five entities written by the WWI copy job. Explicit names make a
@@ -66,6 +73,13 @@ raw = {
 print("Loaded raw row counts:", {key: frame.count() for key, frame in raw.items()})
 
 
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
 # CELL ********************
 
 # Conservative, schema-preserving cleansing: trim text, remove exact duplicate
@@ -75,6 +89,13 @@ silver = {
     for key, frame in raw.items()
 }
 
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
 
 # CELL ********************
 
@@ -93,6 +114,13 @@ for key, frame in silver.items():
     )
     print(f"Wrote managed table {qualified_table_name}: {frame.count()} rows")
 
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
 
 # CELL ********************
 
